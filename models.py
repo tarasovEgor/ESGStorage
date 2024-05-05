@@ -2,7 +2,7 @@ from sqlmodel import SQLModel, Field
 
 
 class CompanyBase(SQLModel):
-    comapny_name: str
+    company_name: str
     link: str
     inn: str
     year: int
