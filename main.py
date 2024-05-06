@@ -1,6 +1,7 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Query, Path
 from contextlib import asynccontextmanager
 from sqlmodel import Session
+from typing import Annotated
 from models import Company, CompanyCreate
 from db import init_db, get_session
 
@@ -12,6 +13,17 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+
+@app.get("/company/{company_id}")
+async def get_company_by_id(
+    company_id: Annotated[int, Path(title="The company ID")],
+    session: Session = Depends(get_session)
+) -> Company:
+    company = session.get(Company, company_id)
+    if company is None:
+        raise HTTPException(status_code=404, detail="Company not found.")
+    return company
 
 
 @app.post("/company")
