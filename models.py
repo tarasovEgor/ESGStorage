@@ -10,3 +10,7 @@ class CompanyBase(SQLModel):
 
 class Company(CompanyBase, table=True):
     id: int = Field(default=None, primary_key=True)
+
+
+class CompanyCreate(CompanyBase):
+    pass
