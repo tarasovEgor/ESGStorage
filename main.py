@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends, Query, Path
 from models import Company, PostCompanyItem, PostCompanyRequest, PostCompanyRequestResponse
 from contextlib import asynccontextmanager
-from sqlmodel import Session
+from sqlmodel import Session, select
 from query import create_companies
 from typing import Annotated
 from db import init_db, get_session
@@ -14,6 +14,29 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+
+@app.get("/company")
+async def get_companies(
+    name: Annotated[str | None, Query()] = None, 
+    year: Annotated[str | None, Query()] = None,
+    inn: Annotated[str | None, Query()] = None,
+    session: Session = Depends(get_session)
+) -> list[Company]:
+    company_list = session.exec(select(Company)).all()
+    if name:
+        company_list = [
+            c for c in company_list if name.lower() in c.company_name.lower() 
+        ]
+    if year:
+        company_list = [
+            c for c in company_list if year in str(c.year) 
+        ]
+    if inn:
+        company_list = [
+            c for c in company_list if inn in c.inn
+        ]
+    return company_list
 
 
 @app.get("/company/{company_id}")
