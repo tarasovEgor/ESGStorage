@@ -1,8 +1,9 @@
 from fastapi import FastAPI, HTTPException, Depends, Query, Path
+from models import Company, PostCompanyItem, PostCompanyRequest, PostCompanyRequestResponse
 from contextlib import asynccontextmanager
 from sqlmodel import Session
+from query import create_companies
 from typing import Annotated
-from models import Company, CompanyCreate
 from db import init_db, get_session
 
 
@@ -27,8 +28,8 @@ async def get_company_by_id(
 
 
 @app.post("/company")
-async def create_company(
-    company_data: CompanyCreate,
+async def post_company(
+    company_data: PostCompanyItem,
     session: Session = Depends(get_session)
 ) -> Company:
     company = Company(
@@ -40,3 +41,25 @@ async def create_company(
     session.refresh(company)
     return company
     
+
+@app.post("/companies")
+async def post_companies(
+    company_data: PostCompanyRequest,
+    session: Session = Depends(get_session)
+) -> PostCompanyRequestResponse:
+    company_names = [c.company_name for c in company_data.data]
+    company_links = [c.link for c in company_data.data]
+    company_years = [c.year for c in company_data.data]
+    company_inns = [c.inn for c in company_data.data]
+    companies = await create_companies(
+        session, company_names, company_links, company_years, company_inns
+    )
+    return PostCompanyRequestResponse(
+        data=[
+            PostCompanyItem(
+                company_name=c.company_name, link=c.link,
+                inn=c.inn, year=c.year
+            )
+            for c in companies
+        ]
+    )
