@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: uvicorn_reports_api
+    build: .
+    env_file:
+      - .env
+    depends_on:
+      - db
+    command: bash -c 'uvicorn main:app --reload --port=8000 --host=0.0.0.0'
+    volumes:
+      - .:/app
+    ports:
+      - ${APP_HOST_PORT}:8000
+    # restart: always
+    
+
+  db:
+    container_name: reports_db_test
+    image: postgres
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=database
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - 5432:5432
+    command: -p 5432
+    expose:
+      - 5432
+    # ports:
+    #   - ${POSTGRES_DB_HOST_PORT}:5432
+    volumes:
+      - C:\Users\egort\OneDrive\Рабочий стол\mnt:/var/lib/postgres/data
+    
+    # restart: always

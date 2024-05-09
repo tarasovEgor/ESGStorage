@@ -1,6 +1,9 @@
 from sqlmodel import create_engine, SQLModel, Session
 
-DATABASE_URL = "postgresql://postgres:password@localhost:5431/reports_db"
+# Previous container url
+# DATABASE_URL = "postgresql://postgres:password@localhost:5431/reports_db"
+
+DATABASE_URL = 'postgresql://postgres:mypassword@reports_db_test:5432/database'
 
 engine = create_engine(DATABASE_URL, echo=True)
 
