@@ -17,7 +17,7 @@ services:
     
 
   db:
-    container_name: reports_db_test
+    container_name: reports_db
     image: postgres
     env_file:
       - .env

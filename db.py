@@ -3,7 +3,7 @@ from sqlmodel import create_engine, SQLModel, Session
 # Previous container url
 # DATABASE_URL = "postgresql://postgres:password@localhost:5431/reports_db"
 
-DATABASE_URL = 'postgresql://postgres:mypassword@reports_db_test:5431/database'
+DATABASE_URL = 'postgresql://postgres:mypassword@reports_db:5431/database'
 
 engine = create_engine(DATABASE_URL, echo=True)
 
