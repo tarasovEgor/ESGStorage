@@ -33,7 +33,7 @@ services:
     # ports:
     #   - ${POSTGRES_DB_HOST_PORT}:5432
     volumes:
-      - /mnt/ESGStorage:/varlib/postgres/data
+      - /mnt/ESGStorage:/var/lib/postgresql/data
       # - C:\Users\egort\OneDrive\Рабочий стол\mnt:/var/lib/postgres/data
     
     # restart: always
